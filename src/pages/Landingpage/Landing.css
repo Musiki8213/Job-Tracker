@@ -1,17 +1,16 @@
-
 body {
-   font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #bdbcbc; 
-  color: #000000; 
 }
 
-/* #landingSec{
-    /* background-image: url("public/landingbackground.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 800px 700px; */
+#landingSec {
+  background-image: url("public/68aa50a30ad2d56640d3ba7c65ea4a13.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover; 
+}
 
 /* Landing Page Container */
 #landing-page {
@@ -19,7 +18,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 95.6vh;
   padding: 20px;
   text-align: center;
 }
@@ -31,7 +30,7 @@ body {
 
 #landing-title {
   font-size: 3em;
-  color: #E64A19;
+  color: #ff9900; 
   margin-bottom: 10px;
   letter-spacing: 2px;
 }
@@ -45,52 +44,96 @@ body {
 #landing-description {
   font-size: 1.2em;
   line-height: 1.6;
-  color: #000000; 
+  color: #e0d8c7; 
 }
 
 /* Features Section */
 #landing-features {
   margin-bottom: 40px;
-  backdrop-filter: blur(-9px);
+  backdrop-filter: blur(10px);
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  width: 500px;
+  justify-items: center;
 }
 
 #landing-features-title {
   font-size: 2em;
-  color: #E64A19; 
-  margin-bottom: 20px;
+  color: #e0d8c7;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 #landing-features-list {
   list-style: none;
   padding: 0;
+  margin: 0 auto; 
+  max-width: 500px; 
 }
 
 #landing-features-list li {
   font-size: 1.1em;
   margin-bottom: 10px;
-  color: #000000;
+  color: #ffffff;
   position: relative;
-  padding-left: 25px;
+  text-align: left; 
 }
 
 #landing-features-list li::before {
-  content: '✓'; 
+  content: '✓';
   position: absolute;
-  left: 0;
-  color: #FF8F00;
+  left: -25px; 
+  color: #ff9900;
   font-weight: bold;
 }
 
-/* Footer Styles */
-#landing-footer {
+/* Links */
+#landing-actions {
   margin-top: 30px;
+  display: flex;
+  gap: 20px;
 }
 
-#landing-footer-text {
-  font-size: 1.1em;
-  color: #FF8F00; 
+#landing-login-link,
+#landing-register-link {
+  display: inline-block;
+  padding: 12px 30px;
+  border-radius: 5px;
+  text-decoration: none;
   font-weight: bold;
+  transition: background-color 0.3s ease;
+  font-size: 1.1em;
+}
+
+#landing-login-link {
+  background-color: #ff9900; 
+  color: #333333; 
+}
+
+#landing-login-link:hover {
+  background-color: #e68a00; 
+}
+
+#landing-register-link {
+  background-color: #ff9900;
+  color: #333333;
+}
+
+#landing-register-link:hover {
+  background-color: #e68a00;
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 430px) {
+  #landing-features {
+    width: 90%;
+    padding: 20px;
+  }
+
+  #landing-features-list {
+    max-width: 100%;
+  }
 }

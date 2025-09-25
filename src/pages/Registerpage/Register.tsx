@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import Loader from "C:/Users/User/job-tracker/src/pages/Registerpage/Register";
+import Loader from "../../Components/Loader";    
+import './Register.css';
 
 type User = { username: string; password: string };
 
@@ -32,6 +33,7 @@ export default function Register() {
   };
 
   return (
+        <section id="RegisterSec">
     <div id="register-page" style={{ textAlign: "center", padding: "50px" }}>
       <h1 id="register-title">Register</h1>
       <input
@@ -64,5 +66,6 @@ export default function Register() {
         Already have an account? <Link id="register-login-link" to="/login">Login</Link>
       </p>
     </div>
+    </section>
   );
 }

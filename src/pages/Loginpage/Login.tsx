@@ -1,7 +1,8 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { AuthContext } from "C:/Users/User/job-tracker/src/Context/AuthContext";
-import Loader from "C:/Users/User/job-tracker/src/Components/Loader";
+import { AuthContext } from "../../Context/AuthContext";
+import Loader from "../../Components/Loader"; 
+import './Login.css';  
 
 type User = { username: string; password: string };
 
@@ -31,6 +32,7 @@ export default function Login() {
   };
 
   return (
+    <section id="loginSec">
     <div id="login-page" style={{ textAlign: "center", padding: "50px" }}>
       <h1 id="login-title">Login</h1>
       <input
@@ -60,8 +62,9 @@ export default function Login() {
         {loading && <Loader />}
       </button>
       <p>
-        No account? <Link id="login-register-link" to="/register">Register</Link>
+        No account? <Link id="login-register-link" to="/register">  Register</Link>
       </p>
     </div>
+    </section>
   );
 }

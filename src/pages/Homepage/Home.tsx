@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
-import { AuthContext } from "C:/Users/User/job-tracker/src/Context/AuthContext";
-import Loader from "C:/Users/User/job-tracker/src/Components/Loader";
+import { AuthContext } from "../../Context/AuthContext"; 
+import Loader from "../../Components/Loader";   
+import './Home.css';
 
 type Job = {
   id: number;
@@ -32,9 +33,9 @@ export default function Home() {
     if (user) {
       const storedJobs = localStorage.getItem(`jobs_${user}`);
       if (storedJobs) setJobs(JSON.parse(storedJobs));
-      else setJobs([]); // No jobs yet for this user
+      else setJobs([]); 
     } else {
-      setJobs([]); // user not logged in
+      setJobs([]); 
     }
   }, [user]);
 
@@ -137,6 +138,7 @@ export default function Home() {
   };
 
   return (
+    <section id="home-container">
     <div id="home-page" style={{ padding: "20px", textAlign: "center" }}>
       <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
         <h1>Your Jobs</h1>
@@ -178,23 +180,30 @@ export default function Home() {
       </div>
 
       {/* Jobs List */}
-      <div id="jobs-list">
-        {displayedJobs.length === 0 && <p id="no-jobs-message">No jobs match your search/filter.</p>}
-        {displayedJobs.map(job => (
-          <div key={job.id} id={`job-${job.id}`} style={{ marginBottom: "15px", padding: "10px", border: "1px solid #FF8F00", borderRadius: "5px" }}>
-            <Link to={`/jobs/${job.id}`} id={`job-link-${job.id}`} style={{ textDecoration: "none", color: "#000" }}>
-              <p id={`job-company-${job.id}`}><strong>Company:</strong> {job.company}</p>
-              <p id={`job-role-${job.id}`}><strong>Role:</strong> {job.role}</p>
-              <p id={`job-status-${job.id}`}><strong>Status:</strong> {job.status}</p>
-              <p id={`job-date-${job.id}`}><strong>Date Applied:</strong> {job.dateApplied}</p>
-            </Link>
-            <div style={{ marginTop: "5px" }}>
-              <button id={`edit-job-${job.id}`} onClick={() => editJob(job)} style={{ padding: "5px 10px", marginRight: "5px", cursor: "pointer" }}>Edit</button>
-              <button id={`delete-job-${job.id}`} onClick={() => deleteJob(job.id)} style={{ padding: "5px 10px", cursor: "pointer" }}>Delete</button>
-            </div>
-          </div>
-        ))}
+  <div id="jobs-list">
+  {displayedJobs.map(job => (
+    <div key={job.id} id={`job-${job.id}`}>
+      <Link to={`/jobs/${job.id}`} id={`job-link-${job.id}`}>
+        <p id={`job-company-${job.id}`}><strong>Company:</strong> {job.company}</p>
+        <p id={`job-role-${job.id}`}><strong>Role:</strong> {job.role}</p>
+        <p id={`job-status-${job.id}`}><strong>Status:</strong> {job.status}</p>
+        <p id={`job-date-${job.id}`}><strong>Date Applied:</strong> {job.dateApplied}</p>
+      </Link>
+      <div>
+        <button id={`edit-job-${job.id}`} onClick={() => editJob(job)}>
+          Edit
+        </button>
+        <button id={`delete-job-${job.id}`} onClick={() => deleteJob(job.id)}>
+          Delete
+        </button>
       </div>
     </div>
+  ))}
+</div>
+
+      
+    </div>
+     </section>
+   
   );
 }
