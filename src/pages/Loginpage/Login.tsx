@@ -1,70 +1,82 @@
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../../Context/AuthContext";
-import Loader from "../../Components/Loader"; 
-import './Login.css';  
-
-type User = { username: string; password: string };
+import { ToastContext } from "../../Context/ToastContext";
+import Loader from "../../Components/Loader";
+import './Login.css';
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
+  const { showToast } = useContext(ToastContext);
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (!username || !password) return;
+    if (!username.trim() || !password.trim()) {
+      showToast("Please enter both username and password", "error");
+      return;
+    }
     setLoading(true);
 
     setTimeout(() => {
-      const users: User[] = JSON.parse(localStorage.getItem("users") || "[]");
-      const userExists = users.find(u => u.username === username && u.password === password);
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const userExists = users.find((u: { username: string; password: string }) => 
+        u.username === username && u.password === password
+      );
 
       if (userExists) {
         login(username);
+        showToast("Welcome back!", "success");
         navigate("/home");
       } else {
-        alert("Invalid username or password");
+        showToast("Invalid username or password", "error");
       }
       setLoading(false);
     }, 500);
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
+  };
+
   return (
     <section id="loginSec">
-    <div id="login-page" style={{ textAlign: "center", padding: "50px" }}>
-      <h1 id="login-title">Login</h1>
-      <input
-        id="login-username"
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={e => setUsername(e.target.value)}
-        style={{ margin: "10px", padding: "10px" }}
-      />
-      <input
-        id="login-password"
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        style={{ margin: "10px", padding: "10px" }}
-      />
-      <br />
-      <button
-        id="login-button"
-        onClick={handleLogin}
-        disabled={loading}
-        style={{ padding: "10px 20px", cursor: "pointer" }}
-      >
-        Login
-        {loading && <Loader />}
-      </button>
-      <p>
-        No account? <Link id="login-register-link" to="/register">  Register</Link>
-      </p>
-    </div>
+      <div id="login-page">
+        <h1 id="login-title">Login</h1>
+        <div className="login-form">
+          <input
+            id="login-username"
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+          <input
+            id="login-password"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+          <button
+            id="login-button"
+            onClick={handleLogin}
+            disabled={loading}
+          >
+            Login
+            {loading && <Loader />}
+          </button>
+        </div>
+        <p className="auth-link-text">
+          No account? <Link id="login-register-link" to="/register">Register</Link>
+        </p>
+      </div>
     </section>
   );
 }
