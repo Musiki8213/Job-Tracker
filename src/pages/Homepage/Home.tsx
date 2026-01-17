@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../Context/AuthContext"; 
-import Loader from "../../Components/Loader";   
+import { AuthContext } from "../../Context/AuthContext";
+import { ToastContext } from "../../Context/ToastContext";
+import Loader from "../../Components/Loader";
 import './Home.css';
 
 type Job = {
@@ -14,6 +15,7 @@ type Job = {
 
 export default function Home() {
   const { user, logout } = useContext(AuthContext);
+  const { showToast } = useContext(ToastContext);
   const navigate = useNavigate();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [company, setCompany] = useState("");
@@ -28,48 +30,51 @@ export default function Home() {
   const filterStatus = searchParams.get("status") || "";
   const sortOrder = searchParams.get("sort") || "";
 
-  // Load jobs for the current user whenever the component mounts or user changes
   useEffect(() => {
     if (user) {
       const storedJobs = localStorage.getItem(`jobs_${user}`);
-      if (storedJobs) setJobs(JSON.parse(storedJobs));
-      else setJobs([]); 
+      if (storedJobs) {
+        setJobs(JSON.parse(storedJobs));
+      } else {
+        setJobs([]);
+      }
     } else {
-      setJobs([]); 
+      setJobs([]);
     }
   }, [user]);
 
-  // Save jobs to LocalStorage whenever jobs change
   useEffect(() => {
     if (user) {
       localStorage.setItem(`jobs_${user}`, JSON.stringify(jobs));
     }
   }, [jobs, user]);
 
-  // Add or Update job
   const handleAddOrUpdateJob = () => {
-    if (!company || !role || !dateApplied) return;
+    if (!company.trim() || !role.trim() || !dateApplied) {
+      showToast("Please fill in all fields", "error");
+      return;
+    }
     setLoading(true);
 
     setTimeout(() => {
       if (editingJobId !== null) {
-        // Update job
         setJobs(prev =>
           prev.map(job =>
             job.id === editingJobId ? { ...job, company, role, status, dateApplied } : job
           )
         );
         setEditingJobId(null);
+        showToast("Job updated successfully", "success");
       } else {
-        // Add new job
         const newJob: Job = {
-          id: jobs.length > 0 ? jobs[jobs.length - 1].id + 1 : 1,
+          id: jobs.length > 0 ? Math.max(...jobs.map(j => j.id)) + 1 : 1,
           company,
           role,
           status,
           dateApplied,
         };
         setJobs([...jobs, newJob]);
+        showToast("Job added successfully", "success");
       }
 
       setCompany("");
@@ -81,8 +86,17 @@ export default function Home() {
   };
 
   const deleteJob = (id: number) => {
-    setJobs(jobs.filter(job => job.id !== id));
-    if (editingJobId === id) setEditingJobId(null);
+    if (window.confirm("Are you sure you want to delete this job?")) {
+      setJobs(jobs.filter(job => job.id !== id));
+      if (editingJobId === id) {
+        setEditingJobId(null);
+        setCompany("");
+        setRole("");
+        setStatus("Applied");
+        setDateApplied("");
+      }
+      showToast("Job deleted", "info");
+    }
   };
 
   const editJob = (job: Job) => {
@@ -91,9 +105,17 @@ export default function Home() {
     setStatus(job.status);
     setDateApplied(job.dateApplied);
     setEditingJobId(job.id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Search / Filter / Sort
+  const cancelEdit = () => {
+    setEditingJobId(null);
+    setCompany("");
+    setRole("");
+    setStatus("Applied");
+    setDateApplied("");
+  };
+
   let displayedJobs = jobs.filter(job => {
     const matchesSearch =
       job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -137,73 +159,118 @@ export default function Home() {
     });
   };
 
+  const handleLogout = () => {
+    logout();
+    showToast("Logged out successfully", "info");
+    navigate("/login");
+  };
+
   return (
     <section id="home-container">
-    <div id="home-page" style={{ padding: "20px", textAlign: "center" }}>
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-        <h1>Your Jobs</h1>
-        <button onClick={() => { logout(); navigate("/login"); }} style={{ cursor: "pointer" }}>
-          Logout ({user})
-        </button>
-      </header>
+      <div id="home-page">
+        <header>
+          <h1>Your Jobs</h1>
+          <button onClick={handleLogout} className="logout-btn">
+            Logout ({user})
+          </button>
+        </header>
 
-      {/* Add / Edit Job Form */}
-      <div id="add-job-form" style={{ marginBottom: "20px" }}>
-        <input placeholder="Company" value={company} onChange={e => setCompany(e.target.value)} />
-        <input placeholder="Role" value={role} onChange={e => setRole(e.target.value)} />
-        <input type="date" value={dateApplied} onChange={e => setDateApplied(e.target.value)} />
-        <select value={status} onChange={e => setStatus(e.target.value)}>
-          <option value="Applied">Applied</option>
-          <option value="Interviewed">Interviewed</option>
-          <option value="Rejected">Rejected</option>
-        </select>
-        <button onClick={handleAddOrUpdateJob} disabled={loading} style={{ cursor: "pointer" }}>
-          {editingJobId !== null ? "Update Job" : "Add Job"}
-          {loading && <Loader />}
-        </button>
+        <div id="add-job-form">
+          <h2>{editingJobId !== null ? "Edit Job" : "Add New Job"}</h2>
+          <div className="form-row">
+            <input
+              placeholder="Company name"
+              value={company}
+              onChange={e => setCompany(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleAddOrUpdateJob()}
+            />
+            <input
+              placeholder="Job role"
+              value={role}
+              onChange={e => setRole(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleAddOrUpdateJob()}
+            />
+            <input
+              type="date"
+              value={dateApplied}
+              onChange={e => setDateApplied(e.target.value)}
+            />
+            <select value={status} onChange={e => setStatus(e.target.value)}>
+              <option value="Applied">Applied</option>
+              <option value="Interviewed">Interviewed</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+          <div className="form-actions">
+            <button
+              onClick={handleAddOrUpdateJob}
+              disabled={loading}
+              className="primary-btn"
+            >
+              {editingJobId !== null ? "Update Job" : "Add Job"}
+              {loading && <Loader />}
+            </button>
+            {editingJobId !== null && (
+              <button onClick={cancelEdit} className="secondary-btn">
+                Cancel
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div id="search-filter-sort">
+          <h3>Filter & Search</h3>
+          <div className="filter-row">
+            <input
+              placeholder="Search by company or role"
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+            <select value={filterStatus} onChange={handleFilterChange}>
+              <option value="">All Status</option>
+              <option value="Applied">Applied</option>
+              <option value="Interviewed">Interviewed</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+            <select value={sortOrder} onChange={handleSortChange}>
+              <option value="">No Sort</option>
+              <option value="asc">Date: Oldest First</option>
+              <option value="desc">Date: Newest First</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="jobs-list">
+          {displayedJobs.length === 0 ? (
+            <div className="empty-state">
+              <p>{jobs.length === 0 ? "No jobs yet. Add your first job application!" : "No jobs match your filters."}</p>
+            </div>
+          ) : (
+            displayedJobs.map(job => (
+              <div key={job.id} className="job-card">
+                <Link to={`/jobs/${job.id}`} className="job-link">
+                  <div className="job-header">
+                    <h4>{job.company}</h4>
+                    <span className={`status-badge status-${job.status.toLowerCase()}`}>
+                      {job.status}
+                    </span>
+                  </div>
+                  <p className="job-role">{job.role}</p>
+                  <p className="job-date">Applied: {new Date(job.dateApplied).toLocaleDateString()}</p>
+                </Link>
+                <div className="job-actions">
+                  <button onClick={() => editJob(job)} className="edit-btn">
+                    Edit
+                  </button>
+                  <button onClick={() => deleteJob(job.id)} className="delete-btn">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
-
-      {/* Search / Filter / Sort */}
-      <div id="search-filter-sort" style={{ marginBottom: "20px" }}>
-        <input placeholder="Search by company or role" value={searchQuery} onChange={handleSearchChange} />
-        <select value={filterStatus} onChange={handleFilterChange}>
-          <option value="">All Status</option>
-          <option value="Applied">Applied</option>
-          <option value="Interviewed">Interviewed</option>
-          <option value="Rejected">Rejected</option>
-        </select>
-        <select value={sortOrder} onChange={handleSortChange}>
-          <option value="">No Sort</option>
-          <option value="asc">Date Ascending</option>
-          <option value="desc">Date Descending</option>
-        </select>
-      </div>
-
-      {/* Jobs List */}
-  <div id="jobs-list">
-  {displayedJobs.map(job => (
-    <div key={job.id} id={`job-${job.id}`}>
-      <Link to={`/jobs/${job.id}`} id={`job-link-${job.id}`}>
-        <p id={`job-company-${job.id}`}><strong>Company:</strong> {job.company}</p>
-        <p id={`job-role-${job.id}`}><strong>Role:</strong> {job.role}</p>
-        <p id={`job-status-${job.id}`}><strong>Status:</strong> {job.status}</p>
-        <p id={`job-date-${job.id}`}><strong>Date Applied:</strong> {job.dateApplied}</p>
-      </Link>
-      <div>
-        <button id={`edit-job-${job.id}`} onClick={() => editJob(job)}>
-          Edit
-        </button>
-        <button id={`delete-job-${job.id}`} onClick={() => deleteJob(job.id)}>
-          Delete
-        </button>
-      </div>
-    </div>
-  ))}
-</div>
-
-      
-    </div>
-     </section>
-   
+    </section>
   );
 }
