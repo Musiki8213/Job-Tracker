@@ -1,74 +1,91 @@
-/* Register Page Container */
-
-#RegisterSec{
-    background-image: url("public/68aa50a30ad2d56640d3ba7c65ea4a13.jpg");
+#RegisterSec {
+  background-image: url("/68aa50a30ad2d56640d3ba7c65ea4a13.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
-  background-size: cover; 
+  background-size: cover;
   min-height: 100vh;
   position: relative;
-}
-#register-page{
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  backdrop-filter: blur(8px);
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  width: 500px;
-  position: absolute;
-  margin-left: 700px;
-  margin-top: 200px;
 }
 
+#register-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  background: rgba(44, 44, 44, 0.85);
+  width: 100%;
+  max-width: 450px;
+}
 
-/* Page Title */
 #register-title {
-  font-size: 3em;
+  font-size: 2.8em;
   color: #ff9900;
-  margin-bottom: 20px;
-  letter-spacing: 2px;
+  margin: 0 0 35px 0;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
-/* Input Fields */
+.register-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
 #register-username,
 #register-password {
   width: 100%;
-  max-width: 300px;
-  padding: 15px;
-  margin: 10px 0;
-  border: 1px solid #444444; 
-  border-radius: 5px;
-  background-color: #2c2c2c; 
-  color: #ffffff;
+  padding: 14px 18px;
+  border: 2px solid #444;
+  border-radius: 8px;
+  background-color: #2a2a2a;
+  color: #fff;
   font-size: 1em;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
-/* Placeholder text color */
+#register-username:focus,
+#register-password:focus {
+  outline: none;
+  border-color: #ff9900;
+}
+
 #register-username::placeholder,
 #register-password::placeholder {
-  color: #888888; 
+  color: #888;
 }
 
-/* Register Button */
 #register-button {
-  padding: 12px 30px;
+  padding: 14px 30px;
   background-color: #ff9900;
-  color: #333333;
+  color: #1a1a1a;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 1.1em;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
   margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
-#register-button:hover {
+#register-button:hover:not(:disabled) {
   background-color: #e68a00;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
 }
 
 #register-button:disabled {
@@ -76,82 +93,31 @@
   opacity: 0.7;
 }
 
-/* Login Link */
+.auth-link-text {
+  color: #e0e0e0;
+  margin: 0;
+  font-size: 0.95em;
+}
+
 #register-login-link {
-  color: #e0d8c7; 
+  color: #ff9900;
   text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s ease;
+  font-weight: 600;
+  transition: color 0.2s ease;
 }
 
 #register-login-link:hover {
-  color: #ff9900;
+  color: #e68a00;
   text-decoration: underline;
 }
 
-/* Text paragraph */
-#register-page p {
-  color: #ffffff; 
-  margin-top: 20px;
-}
-
-/* Responsive Design */
-@media (max-width: 430px) {
+@media (max-width: 480px) {
   #register-page {
-    width: 70%;
-    margin-left: 10px;
-    margin-right: auto;
-    margin-top: 100px;
-    padding: 15px;
+    padding: 30px 20px;
+    margin: 20px;
   }
 
   #register-title {
-    font-size: 2.5em;
-  }
-
-  #register-username,
-  #register-password {
-    max-width: 100%;
-  }
-
-  #registerSec {
-    background-image: url("public/68aa50a30ad2d56640d3ba7c65ea4a13.jpg");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover;
-    min-width: 40vh;
-    position: relative;
-  }
-}
-
-
-
-@media (max-width: 1440px) {
-  #register-page {
-    width: 40%;
-    margin-left: 100px;
-    margin-right: auto;
-    margin-top: 100px;
-    padding: 15px;
-  }
-
-  #register-title {
-    font-size: 2.5em;
-  }
-
-  #register-username,
-  #register-password {
-    max-width: 50%;
-  }
-
-  #registerSec {
-    background-image: url("public/68aa50a30ad2d56640d3ba7c65ea4a13.jpg");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-    background-size: cover;
-    min-width: 40vh;
-    position: relative;
+    font-size: 2.2em;
   }
 }
