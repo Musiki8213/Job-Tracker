@@ -5,135 +5,167 @@ body {
 }
 
 #landingSec {
-  background-image: url("public/68aa50a30ad2d56640d3ba7c65ea4a13.jpg");
+  background-image: url("/68aa50a30ad2d56640d3ba7c65ea4a13.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
-  background-size: cover; 
+  background-size: cover;
+  min-height: 100vh;
 }
 
-/* Landing Page Container */
 #landing-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 95.6vh;
-  padding: 20px;
+  min-height: 100vh;
+  padding: 40px 20px;
   text-align: center;
 }
 
-/* Header Styles */
 #landing-header {
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 
 #landing-title {
-  font-size: 3em;
-  color: #ff9900; 
-  margin-bottom: 10px;
+  font-size: 3.5em;
+  color: #ff9900;
+  margin: 0;
+  font-weight: 700;
   letter-spacing: 2px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-/* Intro Section */
 #landing-intro {
-  margin-bottom: 40px;
-  max-width: 800px;
+  margin-bottom: 50px;
+  max-width: 700px;
 }
 
 #landing-description {
-  font-size: 1.2em;
-  line-height: 1.6;
-  color: #e0d8c7; 
+  font-size: 1.3em;
+  line-height: 1.8;
+  color: #e0e0e0;
+  margin: 0;
 }
 
-/* Features Section */
 #landing-features {
-  margin-bottom: 40px;
-  backdrop-filter: blur(10px);
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  width: 500px;
-  justify-items: center;
+  margin-bottom: 50px;
+  backdrop-filter: blur(12px);
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  background: rgba(44, 44, 44, 0.85);
+  width: 100%;
+  max-width: 600px;
 }
 
 #landing-features-title {
-  font-size: 2em;
-  color: #e0d8c7;
-  margin-bottom: 30px;
-  text-align: center;
+  font-size: 2.2em;
+  color: #ff9900;
+  margin: 0 0 30px 0;
+  font-weight: 600;
 }
 
 #landing-features-list {
   list-style: none;
   padding: 0;
-  margin: 0 auto; 
-  max-width: 500px; 
+  margin: 0;
+  text-align: left;
 }
 
 #landing-features-list li {
-  font-size: 1.1em;
-  margin-bottom: 10px;
-  color: #ffffff;
+  font-size: 1.15em;
+  margin-bottom: 18px;
+  color: #fff;
+  padding-left: 30px;
   position: relative;
-  text-align: left; 
+  line-height: 1.6;
 }
 
 #landing-features-list li::before {
   content: '✓';
   position: absolute;
-  left: -25px; 
+  left: 0;
   color: #ff9900;
   font-weight: bold;
+  font-size: 1.3em;
 }
 
-/* Links */
 #landing-actions {
-  margin-top: 30px;
+  margin-top: 20px;
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 #landing-login-link,
 #landing-register-link {
   display: inline-block;
-  padding: 12px 30px;
-  border-radius: 5px;
+  padding: 14px 35px;
+  border-radius: 8px;
   text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+  font-weight: 600;
   font-size: 1.1em;
+  transition: all 0.2s ease;
 }
 
 #landing-login-link {
-  background-color: #ff9900; 
-  color: #333333; 
+  background-color: rgba(255, 153, 0, 0.2);
+  color: #ff9900;
+  border: 2px solid #ff9900;
 }
 
 #landing-login-link:hover {
-  background-color: #e68a00; 
+  background-color: #ff9900;
+  color: #1a1a1a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 153, 0, 0.4);
 }
 
 #landing-register-link {
   background-color: #ff9900;
-  color: #333333;
+  color: #1a1a1a;
+  border: 2px solid #ff9900;
 }
 
 #landing-register-link:hover {
   background-color: #e68a00;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 153, 0, 0.4);
 }
 
-
-/* Responsive Design */
-
-@media (max-width: 430px) {
-  #landing-features {
-    width: 90%;
-    padding: 20px;
+@media (max-width: 768px) {
+  #landing-title {
+    font-size: 2.5em;
   }
 
-  #landing-features-list {
-    max-width: 100%;
+  #landing-description {
+    font-size: 1.1em;
+  }
+
+  #landing-features {
+    padding: 30px 25px;
+    max-width: 90%;
+  }
+
+  #landing-features-title {
+    font-size: 1.8em;
+  }
+
+  #landing-features-list li {
+    font-size: 1em;
+  }
+
+  #landing-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  #landing-login-link,
+  #landing-register-link {
+    width: 100%;
+    text-align: center;
   }
 }
